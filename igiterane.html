@@ -13,7 +13,7 @@
     --ink-soft:#5B564C;
     --gold:#B8863B;
     --line:#DCD4C2;
-    --senior:#6E1E2E;
+    --reverend:#6E1E2E;
     --minister:#1B5C52;
     --member:#2B3A67;
     --sugar:#C98A2C;
@@ -224,8 +224,8 @@
       <div class="field">
         <label>Title / tier</label>
         <select id="tier">
-          <option value="senior">Reverend Pasteur</option>
-          <option value="minister">Umukozi w'Imana</option>
+          <option value="reverend">Revérend Pasteur</option>
+          <option value="minister">Pasteur, Mwarimu, Umudiakoni</option>
           <option value="member" selected>Umukristo</option>
         </select>
       </div>
@@ -275,13 +275,13 @@
     <h2>Bulk import (for 1000+ people)</h2>
     <div class="hint" style="margin-bottom:10px;">
       In Excel/Sheets, make 4 columns: <b>Name, Tier, Sugar, SaltOil</b>.
-      Tier = Reverend Pasteur / Umukozi w'Imana / Umukristo. Sugar and SaltOil = Yes or No.
+      Tier = Revérend Pasteur / Pasteur / Mwarimu / Umudiakoni / Umukristo. Sugar and SaltOil = Yes or No.
       Then select all rows, copy, and paste below.
     </div>
     <div class="field">
       <label>Paste spreadsheet rows here (tab or comma separated)</label>
       <textarea id="csvInput" rows="8" style="font-family:monospace;font-size:12px;" placeholder="Jean Bosco Nkurunziza, Umukristo, No, Yes
-Alice Uwase, Umukozi w'Imana, Yes, No"></textarea>
+Alice Uwase, Umudiakoni, Yes, No"></textarea>
     </div>
     <div class="actions">
       <button class="btn gold" onclick="importCSV()">Import rows</button>
@@ -302,13 +302,13 @@ Alice Uwase, Umukozi w'Imana, Yes, No"></textarea>
     <div class="key-grid">
       <div class="key-block">
         <h3>Title band (top &amp; bottom strip color)</h3>
-        <div class="key-item"><span class="swatch" style="background:var(--senior)"></span> Reverend Pasteur — senior pastors</div>
-        <div class="key-item"><span class="swatch" style="background:var(--minister)"></span> Umukozi w'Imana — pastors &amp; ministers</div>
-        <div class="key-item"><span class="swatch" style="background:var(--member)"></span> Umukristo — general attendee</div>
+        <div class="key-item"><span class="swatch" style="background:var(--reverend)"></span> Revérend Pasteur </div>
+        <div class="key-item"><span class="swatch" style="background:var(--minister)"></span> Umukozi w'Imana — pasteur / mwarimu / umudiakoni </div>
+        <div class="key-item"><span class="swatch" style="background:var(--member)"></span> Abakristo bandi</div>
       </div>
       <div class="key-block">
         <h3>Bottom strip pattern: dietary awareness</h3>
-        <div class="key-item"><span class="swatch" style="background:var(--senior);clip-path:polygon(0 100%,50% 0,100% 100%)"></span> Triangles (matches top strip) = no restriction</div>
+        <div class="key-item"><span class="swatch" style="background:var(--reverend);clip-path:polygon(0 100%,50% 0,100% 100%)"></span> Triangles (matches top strip) = no restriction</div>
         <div class="key-item"><span class="swatch" style="background:var(--gold);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)"></span> Diamonds, gold = sugar-conscious (diabetes-aware catering)</div>
         <div class="key-item"><span class="swatch" style="background:var(--saltoil);clip-path:polygon(20% 0,100% 0,80% 100%,0 100%)"></span> Chevrons, slate = salt / oil-conscious (blood pressure-aware catering)</div>
         <div class="key-item">Alternating diamond &amp; chevron = both</div>
@@ -323,8 +323,9 @@ Alice Uwase, Umukozi w'Imana, Yes, No"></textarea>
 </div>
 
 <script>
-const TIER_LABEL = {senior:"Reverend Pasteur", minister:"Umukozi w'Imana", member:"Umukristo"};
-const TIER_VAR = {senior:"var(--senior)", minister:"var(--minister)", member:"var(--member)"};
+const TIER_LABEL = {reverend:"Revérend Pasteur", minister:"Umukozi w'Imana", member:"Umukristo"};
+const TIER_VAR = {reverend:"var(--reverend)", minister:"var(--minister)", member:"var(--member)"};
+const MINISTER_TITLES = ["Pasteur", "Mwarimu", "Umudiakoni"]; // the 3 titles that fall under "minister"
 let attendees = [];
 const DEFAULT_VERSE = "Habakuki 3:2 — “Uwiteka we, hembura umurimo wawe”";
 
@@ -433,10 +434,14 @@ function removeAttendee(i){
   saveAttendees();
 }
 
+function stripAccents(s){
+  return (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
 function matchTier(raw){
-  const t = (raw||'').trim().toLowerCase();
-  if(t.includes('reverend') || t.includes('senior')) return 'senior';
-  if(t.includes('umukozi') || t.includes('abakozi') || t.includes('minister') || t.includes('pastor')) return 'minister';
+  const t = stripAccents(raw).trim().toLowerCase();
+  if(t.includes('reverend') || t.includes('reverend')) return 'reverend';
+  if(t.includes('pasteur') || t.includes('mwarimu') || t.includes('umudiakoni')) return 'minister';
   return 'member';
 }
 function matchYes(raw){
@@ -456,6 +461,7 @@ function importCSV(){
       eventName: document.getElementById('eventName').value || "Igiterane cy'ububyutse",
       eventDates: document.getElementById('eventDates').value || '',
       name: name,
+      title: (cells[1]||'').trim(),
       tier: matchTier(cells[1]||''),
       sugar: matchYes(cells[2]||''),
       saltoil: matchYes(cells[3]||'')

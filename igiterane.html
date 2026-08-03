@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Convention Badge Studio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF8F2;
+    --ink:#201F1B;
+    --ink-soft:#5B564C;
+    --gold:#B8863B;
+    --line:#DCD4C2;
+    --senior:#6E1E2E;
+    --minister:#1B5C52;
+    --member:#2B3A67;
+    --sugar:#C98A2C;
+    --saltoil:#4A4453;
+    --panel:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EFEAE0;
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+  }
+  .app{max-width:1200px;margin:0 auto;padding:32px 20px 80px;}
+  header.top{margin-bottom:28px;}
+  header.top .kicker{
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600;
+  }
+  header.top h1{
+    font-family:'Fraunces',serif;font-weight:600;font-size:32px;margin:6px 0 4px;
+  }
+  header.top p{color:var(--ink-soft);font-size:14px;margin:0;max-width:640px;line-height:1.5;}
+
+  .layout{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}
+  @media (max-width:900px){.layout{grid-template-columns:1fr;}}
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:22px;
+  }
+  .panel h2{
+    font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin:0 0 16px;
+  }
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em;}
+  .field input[type=text], .field select, .field textarea{
+    width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:3px;font-family:'Inter',sans-serif;font-size:14px;background:#fff;color:var(--ink);
+  }
+  .field input[type=text]:focus, .field select:focus, .field textarea:focus{outline:2px solid var(--gold);outline-offset:1px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .check-row{display:flex;gap:18px;flex-wrap:wrap;margin-top:2px;}
+  .check-row label{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink);text-transform:none;font-weight:500;}
+  .check-row input{width:16px;height:16px;}
+  .hint{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.4;}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--ink);color:#fff;border:none;border-radius:3px;
+    padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;
+  }
+  .btn.secondary{background:transparent;color:var(--ink);border:1px solid var(--line);}
+  .btn.gold{background:var(--gold);}
+  .btn:hover{opacity:.9;}
+  .actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;align-items:center;}
+
+  /* ---- Badge ---- */
+  .badge{
+    width:88.9mm;height:95mm;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:2mm;
+    position:relative;
+    overflow:hidden;
+    display:flex;flex-direction:column;
+    margin:0 auto;
+    box-shadow:0 1px 3px rgba(0,0,0,.08);
+  }
+  .hole{
+    position:absolute;top:8mm;left:50%;transform:translateX(-50%);
+    width:9mm;height:9mm;border-radius:50%;
+    background:#EFEAE0;border:1px solid var(--line);
+  }
+  .imigongo{display:flex;height:5mm;width:100%;}
+  .imigongo span{flex:1;height:5mm;}
+  .imigongo span.up{clip-path:polygon(0 100%,50% 0,100% 100%);}
+  .imigongo span.down{clip-path:polygon(0 0,50% 100%,100% 0);}
+  .imigongo span.diamond{clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);}
+  .imigongo span.chevron-a{clip-path:polygon(20% 0,100% 0,80% 100%,0 100%);}
+  .imigongo span.chevron-b{clip-path:polygon(0 0,80% 0,100% 100%,20% 100%);}
+
+  .badge-body{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:20mm 13mm 6mm;
+  }
+  .badge-eyebrow{
+    font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;margin-bottom:4mm;
+  }
+  .badge-name{
+    font-family:'Inter',serif;font-weight:500;font-size:12px;line-height:1.2;color:var(--ink);
+    word-break:break-word;
+  }
+  .badge-pill{
+    margin-top:10px;display:inline-block;padding:5px 14px;border-radius:20px;
+    font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:#fff;
+  }
+  .badge-footer{
+    display:flex;align-items:center;justify-content:center;
+    padding:1mm 6mm 2mm;
+  }
+  /* .qr{
+    width:11mm;height:11mm;background:
+      repeating-linear-gradient(0deg, var(--ink) 0 1.2px, transparent 1.2px 3px),
+      repeating-linear-gradient(90deg, var(--ink) 0 1.2px, transparent 1.2px 3px);
+    opacity:.55;
+  } */
+
+  .badge-footer{
+  display:flex;align-items:center;justify-content:flex-end;
+  padding:3mm 6mm 5mm;
+}
+.badge-verse{
+  font-family:'Fraunces',serif;
+  font-style:italic;
+  font-size:12px;
+  line-height:1.4;
+  color:var(--ink-soft);
+  text-align:center;
+}
+
+  /* ---- Preview panel ---- */
+  .preview-wrap{display:flex;justify-content:center;padding:10px 0 4px;}
+
+  /* ---- List ---- */
+  .list{margin-top:24px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);}
+  td.del{cursor:pointer;color:#a33;font-weight:600;text-align:right;}
+  .empty-row td{color:var(--ink-soft);font-style:italic;}
+
+  /* ---- Sheet (print) ---- */
+  .sheet-title{font-family:'Fraunces',serif;font-size:20px;margin:36px 0 14px;}
+  .badge-grid{
+    display:grid;grid-template-columns:repeat(2,88.9mm);gap:6mm;justify-content:start;
+  }
+
+  /* ---- Key sheet ---- */
+  .key-sheet{
+    margin-top:40px;border:2px dashed #a33;border-radius:4px;padding:20px 24px;background:#FFF8F5;
+  }
+  .key-sheet h2{color:#a33;font-family:'Fraunces',serif;margin-top:0;}
+  .key-sheet .warn{font-size:12px;color:#a33;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px;}
+  .key-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  @media (max-width:700px){.key-grid{grid-template-columns:1fr;}}
+  .key-block h3{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin-bottom:8px;}
+  .key-item{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;}
+  .swatch{width:16px;height:16px;border-radius:4px;flex-shrink:0;}
+  .swatch.round{border-radius:50%;}
+
+  /* ---- Print ---- */
+  @media print{
+    body *{visibility:hidden;}
+    body.printing-badges .badge-grid, body.printing-badges .badge-grid *{visibility:visible;}
+    body.printing-badges .badge-grid{position:absolute;top:0;left:0;}
+    body.printing-key .key-sheet, body.printing-key .key-sheet *{visibility:visible;}
+    body.printing-key .key-sheet{position:absolute;top:0;left:0;border:none;}
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+    @page{margin:10mm;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="top">
+    <div class="kicker">Protocol &amp; Ushering Team</div>
+    <h1>Convention Badge Studio</h1>
+    <p>Design and print attendee badges by title, with a discreet pattern that tells the protocol team about dietary needs — without announcing it on the badge itself.</p>
+  </header>
+
+  <div class="layout">
+    <!-- FORM -->
+    <div class="panel">
+      <h2>Attendee details</h2>
+
+      <div class="row2">
+        <div class="field">
+          <label>Event name</label>
+          <input type="text" id="eventName" value="Church Convention">
+        </div>
+        <div class="field">
+          <label>Dates</label>
+          <input type="text" id="eventDates" value="Aug 2026">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Full name</label>
+        <input type="text" id="fullName" placeholder="e.g. Jean Bosco Nkurunziza">
+      </div>
+
+      <div class="field">
+        <label>Title / tier</label>
+        <select id="tier">
+          <option value="senior">Reverend Pasteur</option>
+          <option value="minister">Umukozi w'Imana</option>
+          <option value="member" selected>Umukristo</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Dietary flags (internal use only)</label>
+        <div class="check-row">
+          <label><input type="checkbox" id="sugar"> Sugar-conscious</label>
+          <label><input type="checkbox" id="saltoil"> Salt / oil-conscious</label>
+        </div>
+        <div class="hint">These show only as a shape variation in the badge's bottom strip — never spelled out. See the Protocol Key sheet below for what each pattern means.</div>
+      </div>
+
+      <div class="actions">
+        <button class="btn gold" onclick="addAttendee()">Add to badge list</button>
+      </div>
+
+      <div class="list">
+        <h2>Badge list</h2>
+        <table>
+          <thead><tr><th>Name</th><th>Tier</th><th>Code</th><th></th></tr></thead>
+          <tbody id="listBody">
+            <tr class="empty-row"><td colspan="4">No attendees added yet.</td></tr>
+          </tbody>
+        </table>
+        <div class="actions">
+          <label style="font-size:12px;color:var(--ink-soft);">From <input type="number" id="printFrom" value="1" min="1" style="width:60px;padding:4px;"></label>
+          <label style="font-size:12px;color:var(--ink-soft);">To <input type="number" id="printTo" value="50" min="1" style="width:60px;padding:4px;"></label>
+          <button class="btn" onclick="printBadges()">Print batch</button>
+          <button class="btn secondary" onclick="toggleKey()">Show / hide protocol key</button>
+          <button class="btn secondary" onclick="printKey()">Print protocol key</button>
+        </div>
+        <div class="hint">1000 badges at once can make the browser's print preview slow. Print 40–60 at a time instead — e.g. 1–50, then 51–100, and so on.</div>
+      </div>
+    </div>
+
+    <!-- LIVE PREVIEW -->
+    <div class="panel">
+      <h2>Live preview</h2>
+      <div class="preview-wrap">
+        <div id="previewBadge"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BULK IMPORT (full width, below the two-column layout) -->
+  <div class="panel" style="margin-top:24px;">
+    <h2>Bulk import (for 1000+ people)</h2>
+    <div class="hint" style="margin-bottom:10px;">
+      In Excel/Sheets, make 4 columns: <b>Name, Tier, Sugar, SaltOil</b>.
+      Tier = Reverend Pasteur / Umukozi w'Imana / Umukristo. Sugar and SaltOil = Yes or No.
+      Then select all rows, copy, and paste below.
+    </div>
+    <div class="field">
+      <label>Paste spreadsheet rows here (tab or comma separated)</label>
+      <textarea id="csvInput" rows="8" style="font-family:monospace;font-size:12px;" placeholder="Jean Bosco Nkurunziza, Umukristo, No, Yes
+Alice Uwase, Umukozi w'Imana, Yes, No"></textarea>
+    </div>
+    <div class="actions">
+      <button class="btn gold" onclick="importCSV()">Import rows</button>
+      <button class="btn secondary" onclick="downloadTemplate()">Download CSV template</button>
+      <button class="btn secondary" onclick="clearAll()">Clear all attendees</button>
+    </div>
+    <div id="importMsg" class="hint"></div>
+  </div>
+
+  <!-- PRINT SHEET -->
+  <div class="sheet-title">Badge sheet (cut along badge edges)</div>
+  <div class="badge-grid" id="badgeGrid"></div>
+
+  <!-- PROTOCOL KEY -->
+  <div class="key-sheet" id="keySheet" hidden>
+    <div class="warn">Protocol team only — do not print alongside or hand to attendees</div>
+    <h2>Badge code key</h2>
+    <div class="key-grid">
+      <div class="key-block">
+        <h3>Title band (top &amp; bottom strip color)</h3>
+        <div class="key-item"><span class="swatch" style="background:var(--senior)"></span> Reverend Pasteur — senior pastors</div>
+        <div class="key-item"><span class="swatch" style="background:var(--minister)"></span> Umukozi w'Imana — pastors &amp; ministers</div>
+        <div class="key-item"><span class="swatch" style="background:var(--member)"></span> Umukristo — general attendee</div>
+      </div>
+      <div class="key-block">
+        <h3>Bottom strip pattern: dietary awareness</h3>
+        <div class="key-item"><span class="swatch" style="background:var(--senior);clip-path:polygon(0 100%,50% 0,100% 100%)"></span> Triangles (matches top strip) = no restriction</div>
+        <div class="key-item"><span class="swatch" style="background:var(--gold);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)"></span> Diamonds, gold = sugar-conscious (diabetes-aware catering)</div>
+        <div class="key-item"><span class="swatch" style="background:var(--saltoil);clip-path:polygon(20% 0,100% 0,80% 100%,0 100%)"></span> Chevrons, slate = salt / oil-conscious (blood pressure-aware catering)</div>
+        <div class="key-item">Alternating diamond &amp; chevron = both</div>
+      </div>
+      <div class="key-block">
+        <h3>How to use</h3>
+        <div class="hint" style="font-size:13px;">Glance at the bottom strip when serving food. Nothing on the badge names a condition — it just tells you which tray to steer toward.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const TIER_LABEL = {senior:"Reverend Pasteur", minister:"Umukozi w'Imana", member:"Umukristo"};
+const TIER_VAR = {senior:"var(--senior)", minister:"var(--minister)", member:"var(--member)"};
+let attendees = [];
+const DEFAULT_VERSE = "Habakuki 3:2 — “Uwiteka we, hembura umurimo wawe”";
+
+function imigongoStrip(colorVar, mode, colorVar2){
+  let tris = '';
+  for(let i=0;i<10;i++){
+    if(mode==='diamond'){
+      tris += `<span class="diamond" style="background:${colorVar}"></span>`;
+    } else if(mode==='chevron'){
+      tris += `<span class="${i%2===0?'chevron-a':'chevron-b'}" style="background:${colorVar}"></span>`;
+    } else if(mode==='both'){
+      const useDiamond = i%2===0;
+      tris += useDiamond
+        ? `<span class="diamond" style="background:${colorVar}"></span>`
+        : `<span class="${i%4===1?'chevron-a':'chevron-b'}" style="background:${colorVar2}"></span>`;
+    } else {
+      tris += `<span class="${i%2===0?'up':'down'}" style="background:${colorVar}"></span>`;
+    }
+  }
+  return `<div class="imigongo">${tris}</div>`;
+}
+
+function dietStripMode(a){
+  if(a.sugar && a.saltoil) return {mode:'both', c1:'var(--gold)', c2:'var(--saltoil)'};
+  if(a.sugar) return {mode:'diamond', c1:'var(--gold)'};
+  if(a.saltoil) return {mode:'chevron', c1:'var(--saltoil)'};
+  return {mode:'tier', c1:null};
+}
+
+function badgeHTML(a){
+  const tierColor = TIER_VAR[a.tier];
+  const diet = dietStripMode(a);
+  const bottomStrip = diet.mode==='tier'
+    ? imigongoStrip(tierColor, 'tier')
+    : imigongoStrip(diet.c1, diet.mode, diet.c2);
+  return `
+  <div class="badge">
+    ${imigongoStrip(tierColor, 'tier')}
+    <div class="hole"></div>
+    <div class="badge-body">
+      <div class="badge-eyebrow">${a.eventName} &middot; ${a.eventDates}</div>
+      <div class="badge-name">${a.name || 'Full Name'}</div>
+      
+    </div>
+    ${bottomStrip}
+    <div class="badge-footer">
+    <div class="qr"></div>
+    <div class="badge-verse">${DEFAULT_VERSE}</div>
+    </div>
+  </div>`;
+}
+
+function readForm(){
+  return {
+    eventName: document.getElementById('eventName').value || 'Church Convention',
+    eventDates: document.getElementById('eventDates').value || '',
+    name: document.getElementById('fullName').value.trim(),
+    tier: document.getElementById('tier').value,
+    sugar: document.getElementById('sugar').checked,
+    saltoil: document.getElementById('saltoil').checked
+  };
+}
+
+function renderPreview(){
+  document.getElementById('previewBadge').innerHTML = badgeHTML(readForm());
+}
+
+function renderList(){
+  const body = document.getElementById('listBody');
+  const grid = document.getElementById('badgeGrid');
+  if(attendees.length===0){
+    body.innerHTML = '<tr class="empty-row"><td colspan="4">No attendees added yet.</td></tr>';
+    grid.innerHTML = '';
+    return;
+  }
+  body.innerHTML = attendees.map((a,i)=>{
+    const code = `${a.sugar?'sugar':''}${a.sugar&&a.saltoil?' + ':''}${a.saltoil?'salt/oil':''}` || '—';
+    return `<tr>
+      <td>${a.name||'(unnamed)'}</td>
+      <td>${TIER_LABEL[a.tier]}</td>
+      <td>${code}</td>
+      <td class="del" onclick="removeAttendee(${i})">Remove</td>
+    </tr>`;
+  }).join('');
+  grid.innerHTML = attendees.map(badgeHTML).join('');
+}
+
+function addAttendee(){
+  const a = readForm();
+  if(!a.name){ alert('Add the attendee name first.'); return; }
+  attendees.push(a);
+  document.getElementById('fullName').value = '';
+  document.getElementById('sugar').checked = false;
+  document.getElementById('saltoil').checked = false;
+  renderList();
+  renderPreview();
+  saveAttendees();
+}
+
+function removeAttendee(i){
+  attendees.splice(i,1);
+  renderList();
+  saveAttendees();
+}
+
+function matchTier(raw){
+  const t = (raw||'').trim().toLowerCase();
+  if(t.includes('reverend') || t.includes('senior')) return 'senior';
+  if(t.includes('umukozi') || t.includes('abakozi') || t.includes('minister') || t.includes('pastor')) return 'minister';
+  return 'member';
+}
+function matchYes(raw){
+  return /^(y|yes|true|1)$/i.test((raw||'').trim());
+}
+
+function importCSV(){
+  const raw = document.getElementById('csvInput').value.trim();
+  if(!raw){ return; }
+  const lines = raw.split('\n').map(l=>l.trim()).filter(Boolean);
+  let added = 0, skipped = 0;
+  lines.forEach(line=>{
+    const cells = line.includes('\t') ? line.split('\t') : line.split(',');
+    const name = (cells[0]||'').trim();
+    if(!name || name.toLowerCase()==='name'){ skipped++; return; }
+    attendees.push({
+      eventName: document.getElementById('eventName').value || 'Church Convention',
+      eventDates: document.getElementById('eventDates').value || '',
+      name: name,
+      tier: matchTier(cells[1]||''),
+      sugar: matchYes(cells[2]||''),
+      saltoil: matchYes(cells[3]||'')
+    });
+    added++;
+  });
+  document.getElementById('csvInput').value = '';
+  document.getElementById('importMsg').textContent = `Imported ${added} attendees${skipped?`, skipped ${skipped} blank/header row(s)`:''}. Total now: ${attendees.length}.`;
+  document.getElementById('printTo').value = attendees.length;
+  renderList();
+  saveAttendees();
+}
+
+function downloadTemplate(){
+  const csv = "Name,Tier,Sugar,SaltOil\nJean Bosco Nkurunziza,Umukristo,No,Yes\nAlice Uwase,Umukozi w'Imana,Yes,No\n";
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'badge-import-template.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function clearAll(){
+  if(!confirm('Remove all '+attendees.length+' attendees from the list?')) return;
+  attendees = [];
+  renderList();
+  saveAttendees();
+}
+
+function toggleKey(){
+  const el = document.getElementById('keySheet');
+  el.hidden = !el.hidden;
+}
+
+function printBadges(){
+  const from = parseInt(document.getElementById('printFrom').value)||1;
+  const to = parseInt(document.getElementById('printTo').value)||attendees.length;
+  document.querySelectorAll('#badgeGrid .badge').forEach((el,i)=>{
+    const n = i+1;
+    el.style.display = (n>=from && n<=to) ? '' : 'none';
+  });
+  document.body.classList.add('printing-badges');
+  window.print();
+  document.body.classList.remove('printing-badges');
+  document.querySelectorAll('#badgeGrid .badge').forEach(el=>{ el.style.display=''; });
+}
+function printKey(){
+  document.getElementById('keySheet').hidden = false;
+  document.body.classList.add('printing-key');
+  window.print();
+  document.body.classList.remove('printing-key');
+}
+
+async function saveAttendees(){
+  try{
+    await window.storage.set('attendees', JSON.stringify(attendees), false);
+  }catch(e){ console.error('Save failed', e); }
+}
+async function loadAttendees(){
+  try{
+    const res = await window.storage.get('attendees', false);
+    if(res && res.value){ attendees = JSON.parse(res.value); }
+  }catch(e){ /* no saved data yet */ }
+  renderList();
+}
+
+['eventName','eventDates','fullName','tier','sugar','saltoil'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', renderPreview);
+  document.getElementById(id).addEventListener('change', renderPreview);
+});
+
+renderPreview();
+loadAttendees();
+</script>
+</body>
+</html>

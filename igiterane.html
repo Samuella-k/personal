@@ -101,7 +101,17 @@
     text-align:center;padding:20mm 13mm 6mm;
   }
   .badge-eyebrow{
-    font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;margin-bottom:4mm;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;margin-bottom:4mm;
+  }
+  .eyebrow-event{
+    display:block;
+    font-size:11px;
+  }
+  .eyebrow-dates{
+    display:block;
+    font-size:7px;
+    font-weight:500;
+    margin-top:1mm;
   }
   .badge-name{
     font-family:'Inter',serif;font-weight:500;font-size:12px;line-height:1.2;color:var(--ink);
@@ -198,11 +208,11 @@
       <div class="row2">
         <div class="field">
           <label>Event name</label>
-          <input type="text" id="eventName" value="Church Convention">
+          <input type="text" id="eventName" value="Igiterane cy'ububyutse">
         </div>
         <div class="field">
           <label>Dates</label>
-          <input type="text" id="eventDates" value="Aug 2026">
+          <input type="text" id="eventDates" value="Kuwa 21-23 Kanama 2026">
         </div>
       </div>
 
@@ -356,7 +366,10 @@ function badgeHTML(a){
     ${imigongoStrip(tierColor, 'tier')}
     <div class="hole"></div>
     <div class="badge-body">
-      <div class="badge-eyebrow">${a.eventName} &middot; ${a.eventDates}</div>
+      <div class="badge-eyebrow">
+        <span class="eyebrow-event">${a.eventName}</span>
+        <span class="eyebrow-dates">${a.eventDates}</span>
+      </div>
       <div class="badge-name">${a.name || 'Full Name'}</div>
       
     </div>
@@ -370,7 +383,7 @@ function badgeHTML(a){
 
 function readForm(){
   return {
-    eventName: document.getElementById('eventName').value || 'Church Convention',
+    eventName: document.getElementById('eventName').value || "Igiterane cy'ububyutse",
     eventDates: document.getElementById('eventDates').value || '',
     name: document.getElementById('fullName').value.trim(),
     tier: document.getElementById('tier').value,
@@ -441,7 +454,7 @@ function importCSV(){
     const name = (cells[0]||'').trim();
     if(!name || name.toLowerCase()==='name'){ skipped++; return; }
     attendees.push({
-      eventName: document.getElementById('eventName').value || 'Church Convention',
+      eventName: document.getElementById('eventName').value || "Igiterane cy'ububyutse",
       eventDates: document.getElementById('eventDates').value || '',
       name: name,
       tier: matchTier(cells[1]||''),

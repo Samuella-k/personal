@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Convention Badge Studio</title>
+<title>Igiterane Badge Studio</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -196,8 +196,8 @@
 
   <header class="top">
     <div class="kicker">Protocol &amp; Ushering Team</div>
-    <h1>Convention Badge Studio</h1>
-    <p>Design and print attendee badges by title, with a discreet pattern that tells the protocol team about dietary needs — without announcing it on the badge itself.</p>
+    <h1>Igiterane Badge Studio</h1>
+    <p>Prepare attendee badges with titles, dietary needs, and a discreet protocol team code.</p>
   </header>
 
   <div class="layout">
@@ -255,7 +255,6 @@
           <label style="font-size:12px;color:var(--ink-soft);">From <input type="number" id="printFrom" value="1" min="1" style="width:60px;padding:4px;"></label>
           <label style="font-size:12px;color:var(--ink-soft);">To <input type="number" id="printTo" value="50" min="1" style="width:60px;padding:4px;"></label>
           <button class="btn" onclick="printBadges()">Print batch</button>
-          <button class="btn secondary" onclick="toggleKey()">Show / hide protocol key</button>
           <button class="btn secondary" onclick="printKey()">Print protocol key</button>
         </div>
         <div class="hint">1000 badges at once can make the browser's print preview slow. Print 40–60 at a time instead — e.g. 1–50, then 51–100, and so on.</div>
@@ -297,7 +296,7 @@ Alice Uwase, Umukozi w'Imana, Yes, No"></textarea>
   <div class="badge-grid" id="badgeGrid"></div>
 
   <!-- PROTOCOL KEY -->
-  <div class="key-sheet" id="keySheet" hidden>
+  <div class="key-sheet" id="keySheet" >
     <div class="warn">Protocol team only — do not print alongside or hand to attendees</div>
     <h2>Badge code key</h2>
     <div class="key-grid">
@@ -486,11 +485,6 @@ function clearAll(){
   saveAttendees();
 }
 
-function toggleKey(){
-  const el = document.getElementById('keySheet');
-  el.hidden = !el.hidden;
-}
-
 function printBadges(){
   const from = parseInt(document.getElementById('printFrom').value)||1;
   const to = parseInt(document.getElementById('printTo').value)||attendees.length;
@@ -504,7 +498,6 @@ function printBadges(){
   document.querySelectorAll('#badgeGrid .badge').forEach(el=>{ el.style.display=''; });
 }
 function printKey(){
-  document.getElementById('keySheet').hidden = false;
   document.body.classList.add('printing-key');
   window.print();
   document.body.classList.remove('printing-key');
